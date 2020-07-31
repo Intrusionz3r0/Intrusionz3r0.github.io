@@ -19,12 +19,12 @@
   path: tabs
   url: tags
 -
-  name: "Archives"
+  name: "Timeline"
   path: tabs
   url: archives
   icon: "fas fa-archive"
 -
-  name: "About"
+  name: "Donation"
   icon: "fas fa-info"
   path: tabs
   url: about
