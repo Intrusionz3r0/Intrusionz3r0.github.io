@@ -21,10 +21,7 @@ platforms:
     type: Telegram
     icon: "fab fa-telegram"
     link: "https://telegram.me/share?text=TITLE&url=URL"
-  -
-    type: HacktheBox
-    icon: "fab fa-box"
-    link: "https://telegram.me/share?text=TITLE&url=URL"
+
 
   # Uncomment below if you need to.
   # -
