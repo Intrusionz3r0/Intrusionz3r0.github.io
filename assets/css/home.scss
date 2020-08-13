@@ -48,7 +48,17 @@
         -webkit-box-orient: vertical;
       }
     }
+    .post-img-cnt{
+      width:100%;
+      float:center;
+      padding:20px;
+      display:block;
+	  margin:auto;
+    }
 
+    .post-img{
+      max-width: 100%;
+    }
   } // .post-preview
 
 } // #post-list
