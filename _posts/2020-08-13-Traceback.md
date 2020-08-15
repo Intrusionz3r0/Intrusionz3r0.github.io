@@ -64,15 +64,16 @@ El escaneo determinó lo siguiente:
 
 * Puerto 22 `SSH`: Para este puerto no podemos hacer mucho debido a que no contamos con ningunas credenciales aun y ademas la version del servicio no esta asociada a ninguna vulnerabilidad.
 
-* Puerto `4488`: awacs-ice: Parece ser que los scripts de enumeración no pudieron encontrar con exactitud cual es el servicio que se ejecuta para este puerto.
+* Puerto 4488 `awacs-ice`: Parece ser que los scripts de enumeración no pudieron encontrar con exactitud cual es el servicio que se ejecuta para este puerto.
 
 * Puerto 80 `HTTP`: Nuestro único vector de entrara es el puerto 80, así que vamos a enumerar este servicio.
 
 ## Enumeración puerto 80.
 
 Cuando nos dirigimos al servicio HTTP nos encontramos con lo siguiente:
-**![](https://lh4.googleusercontent.com/KW-jOo3dcAWt-RSLkrRj_KfkjECXHFpdwZ2OgE70Su_PjQ3tmp91Gpzbs0vlvYhZmXW7FV8UE2V8BNkT7yD67VAz
-JNBE9K4r4PeA1JULLjy3GmdXzKhy4sWeUphzH23rP9CEO2--)**
+
+**![](https://lh4.googleusercontent.com/KW-jOo3dcAWt-RSLkrRj_KfkjECXHFpdwZ2OgE70Su_PjQ3tmp91Gpzbs0vlvYhZmXW7FV8UE2V8BNkT7yD67VAzJNBE9K4r4PeA1JULLjy3GmdXzKhy4sWeUphzH23rP9CEO2--)**
+
 Rápidamente utilizo la herramienta `whatweb` para ver que información podemos extraer.
 
 **![](https://lh3.googleusercontent.com/zpnanPw3kZfe_qjyT8D5zPAjMD30qXT2SyNhHhQLXSzHu3ygSPII52y90neg6cZ5F_CyGoTxWVsTQ5fGyG7GGvsMPTMs33H2BFbeNDceMMmp4rzli4m-fgrhYYHiPxLXstwTjlcx)**
