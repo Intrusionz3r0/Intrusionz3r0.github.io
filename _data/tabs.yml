@@ -28,8 +28,3 @@
   icon: "fas fa-info"
   path: tabs
   url: about
--
-  name: "Windows"
-  icon: "fas fa-info"
-  path: tabs
-  url: Windows
