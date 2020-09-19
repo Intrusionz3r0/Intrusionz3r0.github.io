@@ -283,6 +283,7 @@ Cosas que intente:
 Nada funcionaba, hasta que leí en el foro de `hackthebox` de que había que saltar un WAF. 
 
 **¿Que es WAF?**
+
 Un firewall de aplicaciones web es un tipo de firewall que supervisa, filtra o bloquea el tráfico HTTP hacia y desde una aplicación web. Se diferencia de un firewall normal en que puede filtrar el contenido de aplicaciones web específicas,
 
 Esto me dio una pista, así que me puse a probar muchas formas de bypassear un waf hasta que di con la correcta.
@@ -725,6 +726,7 @@ No hemos dado con ningunas credenciales.
 Después de un tiempo encontré el siguiente artículo: [Hacking SQL Server: Enumerating Domain Accounts](https://blog.netspi.com/hacking-sql-server-procedures-part-4-enumerating-domain-accounts/). En resumen nosotros podemos enumerar las cuentas de un dominio de active directory realizando fuzzing al identificador RID.
 
 **¿Que es el RID?**
+
 El RID es un identificador único e incremental que se le asigna a un objeto en un directorio activo, por lo que cada uno de los usuarios de dominio, grupos y equipos tienen un identificador propio.
 
 Comenzaremos obteniendo el nombre de  dominio. (Aunque ya lo sabemos es por cuestiones de aprendizaje)
@@ -782,6 +784,7 @@ intrusionz3r0@kali:~$ a' union select 1,UPPER(sys.fn_varbintohexstr((SELECT SUSE
 Ahora que tenemos el RID podemos extraer el SID del dominio tomando los primeros 48 bytes. 
 
 **¿Que es SID?**
+
 El SID de dominio es el identificador único del dominio y la base de cada RID completo.
 
 * SID + RID: 0X0105000000000005150000001C00D1BCD181F1492BDFC23600020000
@@ -793,12 +796,17 @@ El SID de dominio es el identificador único del dominio y la base de cada RID c
 Nuestro trabajo será fuzzear en los 8 últimos bytes para poder enumerar las cuentas del directorio activo, pero no sera tan facil ya que cada numero debe estar en hexadecimal y debe ser convertido en un formato que SQL Server sea capaz de interpretar.
 
 **Por ejemplo:**
+
 Número: 500
+
 Hex: 0x1F4
 
 Paso 1:  **01F4** (500)
+
 Paso 2:  **F401** (Formato correcto) (Invertido) 
+
 Paso 3:  **F4010000** (Colocamos el relleno para completar los bytes)
+
 Paso 4: Lo concatenamos con el SID base.
 
 Pero la pregunta es: ¿Después de obtener todos los RID de las cuentas de dominio que sigue?
