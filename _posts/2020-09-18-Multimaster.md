@@ -2,7 +2,7 @@
 title: "Hackthebox Multimaster Writeup (OSCP Style)"
 date: 2020-09-19 13:01:08 +/-0800
 categories: [Hackthebox,Windows]
-tags: []
+tags: [WAF,Unicode-Escape,SQLi,SID,RID,Visual Studio,CVE-2019-1414,IDA,BloodHound,ASREPRoast,Server Operators]
 image: /assets/img/Post/Multimaster.jpg
 ---
 
